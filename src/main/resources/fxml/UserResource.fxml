@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="rootPane" xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <VBox>
+        <GridPane>
+            <columnConstraints>
+                <ColumnConstraints></ColumnConstraints>
+                <ColumnConstraints></ColumnConstraints>
+            </columnConstraints>
+            <Label text="Manage User Accounts"></Label>
+            <Button fx:id="btnSave" text="Save"></Button>
+        </GridPane>
+        <GridPane>
+            <columnConstraints>
+                <ColumnConstraints></ColumnConstraints>
+                <ColumnConstraints></ColumnConstraints>
+            </columnConstraints>
+            <TableView fx:id="tvUsers"></TableView>
+        </GridPane>
+        <Button fx:id="btnAdd" text="Add"></Button>
+    </VBox>
+</VBox>
