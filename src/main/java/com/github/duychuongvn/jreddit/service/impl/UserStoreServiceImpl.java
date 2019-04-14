@@ -19,6 +19,7 @@ public class UserStoreServiceImpl implements UserStoreService {
     public void storeUsers(List<UserSource> userSources) {
         try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(dataDir))) {
             UserStore userStore = new UserStore();
+            userSources.iterator().next().setVerified(true);
             userStore.addUserSources(userSources);
             outputStream.writeObject(userStore);
         } catch (IOException ex) {

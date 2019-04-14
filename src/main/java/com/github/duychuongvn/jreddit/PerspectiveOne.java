@@ -80,7 +80,11 @@ public class PerspectiveOne implements FXPerspective {
         // Creating a ToggleGroup
         // Tạo ToggleGroup
         ToggleGroup group = new ToggleGroup();
-
+        group.selectedToggleProperty().addListener(c -> {
+            if (group.getSelectedToggle() != null) {
+                context.send(AppConfig.COMPONENT_RIGHT, group.getSelectedToggle().getUserData());
+            }
+        });
         // Creating new Toggle buttons.
         ToggleButton messagesButton = new ToggleButton("Messages");
         ToggleButton usersButton = new ToggleButton("Users");
@@ -88,19 +92,12 @@ public class PerspectiveOne implements FXPerspective {
 
         messagesButton.setToggleGroup(group);
         usersButton.setToggleGroup(group);
-        messagesButton.setSelected(true);
 
         messagesButton.setUserData(MessageFragment.class);
         usersButton.setUserData(UserFragment.class);
         toolbar.add(messagesButton);
         toolbar.add(usersButton);
-
-        group.selectedToggleProperty().addListener(c -> {
-            if (group.getSelectedToggle() != null) {
-                context.send(AppConfig.COMPONENT_RIGHT, group.getSelectedToggle().getUserData());
-            }
-        });
-
+        messagesButton.setSelected(true);
         mainLayout = new VBox();
 
         // create left button menu

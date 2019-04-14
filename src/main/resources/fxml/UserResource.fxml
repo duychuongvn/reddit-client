@@ -19,13 +19,28 @@
             <Label text="Manage User Accounts"></Label>
             <Button fx:id="btnSave" text="Save"></Button>
         </GridPane>
+        <!--<GridPane>-->
+            <!--<columnConstraints>-->
+                <!--<ColumnConstraints></ColumnConstraints>-->
+                <!--<ColumnConstraints></ColumnConstraints>-->
+            <!--</columnConstraints>-->
+            <!--<TableView fx:id="tvUsers"></TableView>-->
+        <!--</GridPane>-->
         <GridPane>
             <columnConstraints>
                 <ColumnConstraints></ColumnConstraints>
                 <ColumnConstraints></ColumnConstraints>
+                <ColumnConstraints></ColumnConstraints>
+                <ColumnConstraints></ColumnConstraints>
             </columnConstraints>
-            <TableView fx:id="tvUsers"></TableView>
+            <Label text="Username" GridPane.columnIndex="0"></Label>
+            <Label text="Password"  GridPane.columnIndex="1"></Label>
+            <Label text="ClientId"  GridPane.columnIndex="2"></Label>
+            <Label text="Secret"  GridPane.columnIndex="3"></Label>
+            <Label text="Verified"  GridPane.columnIndex="4"></Label>
+            <Label text=""></Label>
         </GridPane>
+        <VBox fx:id="vbUserData"></VBox>
         <Button fx:id="btnAdd" text="Add"></Button>
     </VBox>
 </VBox>

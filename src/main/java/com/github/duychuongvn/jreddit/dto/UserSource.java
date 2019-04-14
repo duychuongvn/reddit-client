@@ -1,6 +1,9 @@
 package com.github.duychuongvn.jreddit.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -11,28 +14,30 @@ import java.util.Objects;
 @Setter
 public class UserSource implements Serializable {
 
+
     private static final long serialVersionUID = -2812802602177382626L;
     private String username;
     private String password;
     private String clientId;
     private String secret;
+    private boolean verified;
 
-    @Override
-    public String toString() {
-        return "UserSource{" +
-                "username='" + username + '\'' +
-                ", password='" + "******" + '\'' +
-                ", clientId='" + clientId + '\'' +
-                ", secret='" + "******" + '\'' +
-                '}';
+    public UserSource(RedditCredentials account) {
+        this.username = account.getUsername();
+        this.password = account.getPassword();
+        this.clientId = account.getClientId();
+        this.secret = account.getSecret();
+        this.verified = account.isVerified();
     }
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserSource that = (UserSource) o;
-        return Objects.equals(username, that.username) &&
+        return verified == that.verified &&
+                Objects.equals(username, that.username) &&
                 Objects.equals(password, that.password) &&
                 Objects.equals(clientId, that.clientId) &&
                 Objects.equals(secret, that.secret);
@@ -41,6 +46,15 @@ public class UserSource implements Serializable {
     @Override
     public int hashCode() {
 
-        return Objects.hash(username, password, clientId, secret);
+        return Objects.hash(username, password, clientId, secret, verified);
+    }
+
+    @Override
+    public String toString() {
+        return "UserSource{" +
+                "username='" + username + '\'' +
+                ", clientId='" + clientId + '\'' +
+                ", verified=" + verified +
+                '}';
     }
 }

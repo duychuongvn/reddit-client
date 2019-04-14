@@ -6,18 +6,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="rootPane" xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            prefHeight="400.0" prefWidth="600.0">
+<fx:root type="VBox" xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         prefWidth="600.0">
 
-    <VBox VBox.vgrow="ALWAYS" prefHeight="200">
-        <VBox prefHeight="40">
-            <Label text="Manage User Accounts" GridPane.rowIndex="0"></Label>
-        </VBox>
-        <Separator></Separator>
+    <VBox>
         <GridPane>
             <columnConstraints>
                 <ColumnConstraints prefWidth="20" maxWidth="20"></ColumnConstraints>
+
                 <ColumnConstraints prefWidth="150" maxWidth="150"></ColumnConstraints>
                 <ColumnConstraints prefWidth="20" maxWidth="20"></ColumnConstraints>
                 <ColumnConstraints prefWidth="150" maxWidth="150"></ColumnConstraints>
@@ -30,18 +27,16 @@
                 <ColumnConstraints prefWidth="20" maxWidth="20"></ColumnConstraints>
 
             </columnConstraints>
-            <Label text="Username" GridPane.columnIndex="1"></Label>
-            <Label text="Password"  GridPane.columnIndex="3"></Label>
-            <Label text="ClientId"  GridPane.columnIndex="5"></Label>
-            <Label text="Secret"  GridPane.columnIndex="7"></Label>
-            <Label text="Verified"  GridPane.columnIndex="9"></Label>
-            <Label text="" GridPane.columnIndex="11"></Label>
+            <rowConstraints >
+                <RowConstraints prefHeight="30" maxHeight="30"></RowConstraints>
+            </rowConstraints>
+            <TextField editable="true" fx:id="lblUsername" GridPane.columnIndex="1"></TextField>
+            <TextField editable="true" fx:id="lblPassword" GridPane.columnIndex="3"></TextField>
+            <TextField editable="true" fx:id="lblClientId" GridPane.columnIndex="5"></TextField>
+            <TextField editable="true" fx:id="lblSecret" GridPane.columnIndex="7"></TextField>
+            <CheckBox fx:id="chbVerified" disable="true" GridPane.columnIndex="9"></CheckBox>
+            <Button fx:id="btnRemove" text="Remove" onAction="#remove" GridPane.columnIndex="11"></Button>
         </GridPane>
-        <VBox fx:id="vbUserData"></VBox>
-        <HBox>
-            <Button fx:id="btnAdd" onAction="#addUser" text="Add"></Button>
-            <Button fx:id="btnSave" onAction="#save" text="Save" GridPane.rowIndex="1"></Button>
 
-        </HBox>
     </VBox>
-</VBox>
+</fx:root>

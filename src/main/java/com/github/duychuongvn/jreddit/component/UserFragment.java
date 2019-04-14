@@ -1,17 +1,22 @@
 package com.github.duychuongvn.jreddit.component;
 
 import com.github.duychuongvn.jreddit.UserSourceNotInitializedException;
+import com.github.duychuongvn.jreddit.annotation.EventHandler;
 import com.github.duychuongvn.jreddit.config.AppConfig;
+import com.github.duychuongvn.jreddit.dto.RedditCredentials;
 import com.github.duychuongvn.jreddit.dto.UserSource;
 import com.github.duychuongvn.jreddit.service.UserStoreService;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.layout.VBox;
 import org.jacpfx.api.annotations.Resource;
 import org.jacpfx.api.annotations.fragment.Fragment;
 import org.jacpfx.api.fragment.Scope;
@@ -19,6 +24,8 @@ import org.jacpfx.rcp.context.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Fragment(id = AppConfig.FRAGMENT_USER,
         viewLocation = "/fxml/UserFragment.fxml",
@@ -28,71 +35,101 @@ import java.util.ArrayList;
 public class UserFragment extends BaseFragment {
 
     @FXML
-    private TableView<UserSource> tvUsers;
+    private TableView<RedditCredentials> tvUsers;
+    @FXML
+    private VBox vbUserData;
     @Autowired
     private UserStoreService userStoreService;
     @Resource
     private Context context;
 
+    private List<RedditCredentials> redditCredentialsList = new ArrayList<>();
     @Override
     protected void initialized() {
 
-        TableColumn<UserSource, String> colUsername = new TableColumn("Username");
-        TableColumn<UserSource, String> colPassword = new TableColumn("Password");
-        TableColumn<UserSource, String> colClientId = new TableColumn("ClientId");
-        TableColumn<UserSource, String> colSecret = new TableColumn("Secret");
+        try { List<RedditCredentials> users = userStoreService.loadUsers().stream()
+                    .map(RedditCredentials::new)
+                    .collect(Collectors.toList());
+
+            users.forEach(user -> {
+                UserRow userRow = new UserRow(context, vbUserData, user);
+            });
+
+        } catch (UserSourceNotInitializedException e) {
+            e.printStackTrace();
+        }
+
+//        loadUserData();
+    }
+
+    private void loadUserData() {
+        TableColumn<RedditCredentials, String> colUsername = new TableColumn("Username");
+        TableColumn<RedditCredentials, String> colPassword = new TableColumn("Password");
+        TableColumn<RedditCredentials, String> colClientId = new TableColumn("ClientId");
+        TableColumn<RedditCredentials, String> colSecret = new TableColumn("Secret");
+        TableColumn<RedditCredentials, Boolean> colVerified = new TableColumn("Verified");
+        colVerified.setEditable(false);
+        colVerified.setCellValueFactory(new PropertyValueFactory<>("verified"));
+        colVerified.setCellFactory(CheckBoxTableCell.<RedditCredentials>forTableColumn(colVerified));
+
 
         colUsername.setCellValueFactory(new PropertyValueFactory<>("username"));
-        colUsername.setCellFactory(TextFieldTableCell.<UserSource>forTableColumn());
-        colUsername.setMinWidth(200);
+        colUsername.setCellFactory(TextFieldTableCell.<RedditCredentials>forTableColumn());
+//        colUsername.setMinWidth(200);
 
-        colUsername.setOnEditCommit((TableColumn.CellEditEvent<UserSource, String> event) -> {
-            TablePosition<UserSource, String> pos = event.getTablePosition();
-            String newFullName = event.getNewValue();
-            int row = pos.getRow();
-            UserSource person = event.getTableView().getItems().get(row);
-            person.setUsername(newFullName);
-        });
-
+//        colUsername.setOnEditCommit((TableColumn.CellEditEvent<UserSource, String> event) -> {
+//            TablePosition<UserSource, String> pos = event.getTablePosition();
+//            String newFullName = event.getNewValue();
+//            int row = pos.getRow();
+//            UserSource person = event.getTableView().getItems().get(row);
+//            person.setUsername(newFullName);
+//        });
+//
         colPassword.setCellValueFactory(new PropertyValueFactory<>("password"));
-        colPassword.setCellFactory(TextFieldTableCell.<UserSource>forTableColumn());
-        colPassword.setMinWidth(200);
-
-        colPassword.setOnEditCommit((TableColumn.CellEditEvent<UserSource, String> event) -> {
-            TablePosition<UserSource, String> pos = event.getTablePosition();
-            String newValue = event.getNewValue();
-            int row = pos.getRow();
-            UserSource person = event.getTableView().getItems().get(row);
-            person.setPassword(newValue);
-        });
+        colPassword.setCellFactory(TextFieldTableCell.<RedditCredentials>forTableColumn());
+//        colPassword.setMinWidth(200);
+//
+//        colPassword.setOnEditCommit((TableColumn.CellEditEvent<UserSource, String> event) -> {
+//            TablePosition<UserSource, String> pos = event.getTablePosition();
+//            String newValue = event.getNewValue();
+//            int row = pos.getRow();
+//            UserSource person = event.getTableView().getItems().get(row);
+//            person.setPassword(newValue);
+//        });
 
         colClientId.setCellValueFactory(new PropertyValueFactory<>("clientId"));
-        colClientId.setCellFactory(TextFieldTableCell.<UserSource>forTableColumn());
-        colClientId.setMinWidth(200);
-
-        colClientId.setOnEditCommit((TableColumn.CellEditEvent<UserSource, String> event) -> {
-            TablePosition<UserSource, String> pos = event.getTablePosition();
-            String newValue = event.getNewValue();
-            int row = pos.getRow();
-            UserSource person = event.getTableView().getItems().get(row);
-            person.setClientId(newValue);
-        });
+        colClientId.setCellFactory(TextFieldTableCell.<RedditCredentials>forTableColumn());
+//        colClientId.setMinWidth(200);
+//
+//        colClientId.setOnEditCommit((TableColumn.CellEditEvent<UserSource, String> event) -> {
+//            TablePosition<UserSource, String> pos = event.getTablePosition();
+//            String newValue = event.getNewValue();
+//            int row = pos.getRow();
+//            UserSource person = event.getTableView().getItems().get(row);
+//            person.setClientId(newValue);
+//        });
         colSecret.setCellValueFactory(new PropertyValueFactory<>("secret"));
-        colSecret.setCellFactory(TextFieldTableCell.<UserSource>forTableColumn());
-        colSecret.setMinWidth(200);
+        colSecret.setCellFactory(TextFieldTableCell.<RedditCredentials>forTableColumn());
+//        colSecret.setMinWidth(200);
+//
+//        colSecret.setOnEditCommit((TableColumn.CellEditEvent<UserSource, String> event) -> {
+//            TablePosition<UserSource, String> pos = event.getTablePosition();
+//            String newValue = event.getNewValue();
+//            int row = pos.getRow();
+//            UserSource person = event.getTableView().getItems().get(row);
+//            person.setSecret(newValue);
+//        });
 
-        colSecret.setOnEditCommit((TableColumn.CellEditEvent<UserSource, String> event) -> {
-            TablePosition<UserSource, String> pos = event.getTablePosition();
-            String newValue = event.getNewValue();
-            int row = pos.getRow();
-            UserSource person = event.getTableView().getItems().get(row);
-            person.setSecret(newValue);
-        });
+        tvUsers.getColumns().addAll(colUsername, colPassword, colClientId, colSecret, colVerified);
 
-        tvUsers.getColumns().addAll(colUsername, colPassword, colClientId, colSecret);
+        tvUsers.getSelectionModel().setCellSelectionEnabled(true);
+        tvUsers.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
 
         try {
-            tvUsers.setItems(FXCollections.observableList(new ArrayList<>(userStoreService.loadUsers())));
+            tvUsers.setItems(FXCollections.observableList(userStoreService.loadUsers().stream()
+                    .map(RedditCredentials::new)
+                    .collect(Collectors.toList())));
         } catch (UserSourceNotInitializedException e) {
             e.printStackTrace();
         }
@@ -100,7 +137,10 @@ public class UserFragment extends BaseFragment {
 
     @FXML
     public void save() {
-        userStoreService.storeUsers(tvUsers.getItems());
+        userStoreService.storeUsers(vbUserData.getChildren()
+                .stream()
+                .map(x->new UserSource(((UserRow)x).getRedditCredentials()))
+                .collect(Collectors.toList()));
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Save successful");
 
@@ -113,6 +153,16 @@ public class UserFragment extends BaseFragment {
 
     @FXML
     public void addUser() {
-        tvUsers.getItems().add(new UserSource());
+        RedditCredentials redditCredentials = new RedditCredentials();
+        UserRow userRow = new UserRow(context, vbUserData, redditCredentials);
+//        tvUsers.getItems().add(redditCredentials);
+//        tvUsers.getSelectionModel().select(redditCredentials);
     }
+
+    @EventHandler
+    public void handleRemoveUser(UserRow.RemoveUserMessage message) {
+
+    }
+
+
 }
